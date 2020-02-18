@@ -38,24 +38,6 @@ public class MSGCalendar {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( MSGCalendar.class );
 
-    public static void main(String[] args) {
-        LOGGER.info("Testing Homebrew MSG Calendar");
-
-        CalendarEvent calendarEvent = new CalendarEvent();
-        calendarEvent.setAlert(calendarEvent.CREATED_ON + 100000);
-        calendarEvent.save();
-        calendarEvent.setName("Updating");
-        calendarEvent.setStart(Instant.now().plus(3, ChronoUnit.HOURS).toEpochMilli());
-        calendarEvent.setEnd(Instant.now().plus(5, ChronoUnit.HOURS).toEpochMilli());
-        calendarEvent.setData(new DiscordEventData().setMentionEveryone(true));
-        calendarEvent.save();
-
-        LOGGER.info(buildDurationString(calendarEvent.getTimeBetween(), '`'));
-        LOGGER.info(buildDurationString(calendarEvent.getTimeUntil(), '`'));
-        LOGGER.info(buildDurationString(calendarEvent.getStartsIn(), '`'));
-        LOGGER.info(buildDurationString(calendarEvent.getDuration(), '`'));
-    }
-
     @Nullable
     public static ArrayList<CalendarDay> getCalendarDays() {
         return CalendarDay.getCalendarDays();
