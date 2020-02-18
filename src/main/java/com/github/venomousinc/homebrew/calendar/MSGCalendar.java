@@ -2,7 +2,6 @@ package com.github.venomousinc.homebrew.calendar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.venomousinc.homebrew.calendar.data.CalendarDay;
-import com.github.venomousinc.homebrew.calendar.data.CalendarEvent;
 import com.github.venomousinc.homebrew.calendar.data.CalendarPair;
 import com.github.venomousinc.homebrew.calendar.data.extra.DefaultEventData;
 import com.github.venomousinc.homebrew.calendar.data.extra.DiscordEventData;
@@ -16,7 +15,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Optional;
 

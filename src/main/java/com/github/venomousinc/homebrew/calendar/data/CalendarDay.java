@@ -32,6 +32,11 @@ public class CalendarDay {
     private static final Logger LOGGER = LoggerFactory.getLogger( CalendarDay.class );
 
     public static final File CALENDAR_FOLDER = new File("calendar");
+
+    static {
+        LOGGER.debug("Calendar - Created: {} Exists: {}", CALENDAR_FOLDER.mkdirs(), CALENDAR_FOLDER.exists());
+    }
+
     public static final String CALENDAR_FILE_EXTENSION = "msgcal";
     /**
      * <b>1970-01-01.msgcal</b>
