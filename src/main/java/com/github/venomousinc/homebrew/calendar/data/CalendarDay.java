@@ -45,10 +45,6 @@ public class CalendarDay {
      */
     public static final String CALENDAR_FILE_FORMAT = "%s.%s";
 
-    static {
-        LOGGER.debug("Calendar Folder Created: {} exists: {}", CALENDAR_FOLDER.mkdirs(), CALENDAR_FOLDER.exists());
-    }
-
     @JsonProperty("DAY_OF_YEAR")
     public final int DAY_OF_YEAR;
     @JsonProperty("YEAR")
