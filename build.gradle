@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+
+group 'com.github.venomousinc'
+version '1.0'
+
+sourceCompatibility = 8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0.pr3'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.0.pr3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr3'
+    compile 'org.jetbrains:annotations:13.0'
+}
