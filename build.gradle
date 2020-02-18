@@ -10,6 +10,7 @@ version '1.0.1'
 sourceCompatibility = 9
 
 repositories {
+    jcenter()
     mavenCentral()
 }
 
