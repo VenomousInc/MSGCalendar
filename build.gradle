@@ -5,9 +5,9 @@ plugins {
 
 
 group 'com.github.venomousinc'
-version '1.0'
+version '1.0.1'
 
-sourceCompatibility = 8
+sourceCompatibility = 9
 
 repositories {
     mavenCentral()

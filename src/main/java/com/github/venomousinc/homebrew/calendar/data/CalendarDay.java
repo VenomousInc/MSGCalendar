@@ -3,7 +3,6 @@ package com.github.venomousinc.homebrew.calendar.data;
 
 import com.fasterxml.jackson.annotation.*;
 import com.github.venomousinc.homebrew.calendar.MSGCalendar;
-import com.github.venomousinc.homebrew.calendar.data.extra.DiscordEventData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -14,6 +13,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A Calendar Day, such as 2020-46
@@ -69,26 +71,65 @@ public class CalendarDay {
     }
 
     @JsonIgnore
-    public boolean save() {
+    public CalendarDay save() {
         final String dateStr = getDate().toString();
         if(CALENDAR_FOLDER.exists() || CALENDAR_FOLDER.mkdirs()) {
             try {
                 MSGCalendar.OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValue(getFile(), this);
                 LOGGER.info("Saving Calendar Day: `{}`", dateStr);
-                return true;
+                return this;
             } catch (IOException e) {
                 LOGGER.error("Could not save Calendar Day: `{}`", dateStr);
                 LOGGER.error("Exception occurred while saving!", e);
-                return false;
+                return null;
             }
         }
         LOGGER.error("Calendar Day could not save: `{}` Calendar Folder: {}", dateStr, CALENDAR_FOLDER.toString());
-        return false;
+        return null;
     }
 
     @JsonIgnore
     public File getFile() {
         return new File(CALENDAR_FOLDER, String.format(CALENDAR_FILE_FORMAT, getDate().toString(), CALENDAR_FILE_EXTENSION));
+    }
+
+    @Nullable
+    public CalendarEvent getEvent(final String uniqueId) {
+        return getEvents().stream()
+                .filter(dayEvent -> dayEvent.getUniqueID().equals(uniqueId))
+                .findFirst().orElse(null);
+    }
+
+    @Nullable
+    public CalendarEvent getEvent(CalendarEvent calendarEvent) {
+        return getEvent(calendarEvent.getUniqueID());
+    }
+
+    @Nullable
+    public CalendarEvent removeEvent(CalendarEvent calendarEvent) {
+        if(getEvents().remove(calendarEvent)) {
+            return calendarEvent;
+        }
+        return null;
+    }
+
+    public static ArrayList<CalendarDay> getCalendarDays() {
+        if(CALENDAR_FOLDER.isDirectory()) {
+            final String[] calendarFileNames = CALENDAR_FOLDER.list();
+            if(calendarFileNames != null && calendarFileNames.length > 0) {
+                ArrayList<CalendarDay> calendarDays = Arrays.stream(calendarFileNames)
+                        .map(File::new).filter(File::canRead).filter(File::isFile)
+                        .map(CalendarDay::of).filter(Objects::nonNull)
+                        .collect(Collectors.toCollection(ArrayList::new));
+                LOGGER.debug("Returning ArrayList of {} CalendarDays", calendarDays.size());
+                return calendarDays;
+            } else {
+                LOGGER.debug("No CalendarDay Files found!");
+            }
+        } else {
+            LOGGER.debug("No Calendar Folder found!\n{}", CALENDAR_FOLDER.getAbsolutePath());
+        }
+        return null;
     }
 
     @JsonIgnore
@@ -99,9 +140,17 @@ public class CalendarDay {
     @JsonIgnore
     @Nullable
     public static CalendarDay of(@NotNull LocalDate dateTime) {
-        File file = getFile(dateTime.toString());
+        CalendarDay calendarDay = of(getFile(dateTime.toString()));
 
-        LOGGER.debug("of({}) File: {}", dateTime.toString(), file.toString());
+        if(calendarDay != null)
+            return calendarDay;
+
+        return new CalendarDay(dateTime.getDayOfYear(), dateTime.getYear(), null).save();
+    }
+
+    @Nullable
+    public static CalendarDay of(@NotNull File file) {
+        LOGGER.debug("CalendarDay#of({})", file.toString());
         if(file.exists() && file.canRead() && file.isFile()) {
             try {
                 return MSGCalendar.OBJECT_MAPPER.readValue(file, CalendarDay.class);
@@ -110,19 +159,7 @@ public class CalendarDay {
             }
         }
 
-        final CalendarDay calendarDay = new CalendarDay(dateTime.getDayOfYear(), dateTime.getYear(), null);
-
-        if(!calendarDay.save())
-            return null;
-
-        return calendarDay;
+        return null;
     }
 
-
-    @Nullable
-    public CalendarEvent getEvent(CalendarEvent calendarEvent) {
-        return getEvents().stream()
-                .filter(dayEvent -> dayEvent.getUniqueID().equals(calendarEvent.getUniqueID()))
-                .findFirst().orElse(null);
-    }
 }

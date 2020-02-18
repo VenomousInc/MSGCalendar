@@ -185,7 +185,7 @@ public class CalendarEvent {
      * @return
      */
     @JsonIgnore public Duration getTimeBetween() {
-        return Duration.ofMillis(CREATED_ON - getAnnouncementTime());
+        return Duration.ofMillis(Math.abs(CREATED_ON - getAnnouncementTime()));
     }
 
     /**
@@ -218,7 +218,7 @@ public class CalendarEvent {
      * @return The duration of the Event (start to end)
      */
     @JsonIgnore public Duration getDuration() {
-        return Duration.ofMillis(getStart() - getEnd());
+        return Duration.ofMillis(Math.abs(getStart() - getEnd()));
     }
 
     /**

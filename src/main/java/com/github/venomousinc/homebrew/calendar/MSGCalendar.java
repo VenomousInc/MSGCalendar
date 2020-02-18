@@ -3,6 +3,7 @@ package com.github.venomousinc.homebrew.calendar;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.venomousinc.homebrew.calendar.data.CalendarDay;
 import com.github.venomousinc.homebrew.calendar.data.CalendarEvent;
+import com.github.venomousinc.homebrew.calendar.data.CalendarPair;
 import com.github.venomousinc.homebrew.calendar.data.extra.DefaultEventData;
 import com.github.venomousinc.homebrew.calendar.data.extra.DiscordEventData;
 import com.github.venomousinc.homebrew.calendar.data.extra.EventData;
@@ -16,6 +17,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * @author VenomousInc
@@ -39,7 +42,7 @@ public class MSGCalendar {
         LOGGER.info("Testing Homebrew MSG Calendar");
 
         CalendarEvent calendarEvent = new CalendarEvent();
-        calendarEvent.setAlert((-calendarEvent.CREATED_ON) - 50);
+        calendarEvent.setAlert(calendarEvent.CREATED_ON + 100000);
         calendarEvent.save();
         calendarEvent.setName("Updating");
         calendarEvent.setStart(Instant.now().plus(3, ChronoUnit.HOURS).toEpochMilli());
@@ -54,10 +57,41 @@ public class MSGCalendar {
     }
 
     @Nullable
+    public static ArrayList<CalendarDay> getCalendarDays() {
+        return CalendarDay.getCalendarDays();
+    }
+
+    @Nullable
     public static CalendarDay getCalendarDay(long epochMs) {
         LocalDate localDate = LocalDate.ofInstant(Instant.ofEpochMilli(epochMs), ZoneId.of("UTC"));
         LOGGER.debug("Getting Calendar Day from epoch MS: {} -> {}", epochMs, localDate.toString());
         return CalendarDay.of(localDate);
+    }
+
+    @Nullable
+    public static CalendarPair getCalendarEvent(final String uniqueID) {
+        ArrayList<CalendarDay> calendarDays = getCalendarDays();
+
+        if(calendarDays != null && calendarDays.size() > 0) {
+            final Optional<CalendarPair> optionalCalendarPair = calendarDays.stream()
+                    .filter(calendarDay -> calendarDay.getEvent(uniqueID) != null)
+                    .map(calendarDay -> new CalendarPair(calendarDay, calendarDay.getEvent(uniqueID)))
+                    .findFirst();
+            if(optionalCalendarPair.isPresent()) {
+                return optionalCalendarPair.get();
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static CalendarPair deleteCalendarItem(final String uniqueID) {
+        final CalendarPair calendarPair = getCalendarEvent(uniqueID);
+        if(calendarPair != null && calendarPair.DAY.removeEvent(calendarPair.EVENT) != null) {
+            return calendarPair;
+        }
+        return null;
     }
 
     /**
