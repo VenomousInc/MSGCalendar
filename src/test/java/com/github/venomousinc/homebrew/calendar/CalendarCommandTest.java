@@ -1,6 +1,7 @@
 package com.github.venomousinc.homebrew.calendar;
 
 import com.github.venomousinc.homebrew.calendar.data.CalendarEvent;
+import com.github.venomousinc.homebrew.calendar.data.CalendarPair;
 import com.github.venomousinc.homebrew.calendar.data.extra.DiscordEventData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,15 @@ class CalendarCommandTest {
                     calendarEvent.save();
 
                     LOGGER.info("Event: {}\n{}", calendarEvent.toPrettyPrint(), MSGCalendar.buildDurationString(calendarEvent.getStartsIn()));
+                    LOGGER.info("GetCalEvent: {}", MSGCalendar.getCalendarEvent(calendarEvent.getUniqueID()));
                     LOGGER.info("Data: {}", (calendarEvent.getData() instanceof DiscordEventData));
+                    LOGGER.info("");
+                    LOGGER.info("");
+                    CalendarPair cp = MSGCalendar.deleteCalendarItem(calendarEvent.getUniqueID());
+                    LOGGER.info("");
+                    LOGGER.info("");
+                    if(cp != null)
+                        LOGGER.info("Deleted: E:{}, D:{}", cp.EVENT, cp.DAY);
                 } else if(scanner.nextLine().equals("exit")) {
                     break;
                 }

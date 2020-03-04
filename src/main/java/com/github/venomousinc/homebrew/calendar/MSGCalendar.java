@@ -57,11 +57,14 @@ public class MSGCalendar {
                     .filter(calendarDay -> calendarDay.getEvent(uniqueID) != null)
                     .map(calendarDay -> new CalendarPair(calendarDay, calendarDay.getEvent(uniqueID)))
                     .findFirst();
+
             if(optionalCalendarPair.isPresent()) {
+                LOGGER.debug("Found Calendar Event with UUID `{}`", uniqueID);
                 return optionalCalendarPair.get();
             }
         }
 
+        LOGGER.error("Couldn't find Calendar Event with UUID `{}`", uniqueID);
         return null;
     }
 
@@ -69,6 +72,7 @@ public class MSGCalendar {
     public static CalendarPair deleteCalendarItem(final String uniqueID) {
         final CalendarPair calendarPair = getCalendarEvent(uniqueID);
         if(calendarPair != null && calendarPair.DAY.removeEvent(calendarPair.EVENT) != null) {
+            LOGGER.info("Deleted Calendar Item: {}", uniqueID);
             return calendarPair;
         }
         return null;

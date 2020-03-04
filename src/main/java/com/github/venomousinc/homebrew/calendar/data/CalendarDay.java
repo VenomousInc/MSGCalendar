@@ -113,6 +113,7 @@ public class CalendarDay {
     @Nullable
     public CalendarEvent removeEvent(CalendarEvent calendarEvent) {
         if(getEvents().remove(calendarEvent)) {
+            save();
             return calendarEvent;
         }
         return null;
@@ -123,7 +124,7 @@ public class CalendarDay {
             final String[] calendarFileNames = CALENDAR_FOLDER.list();
             if(calendarFileNames != null && calendarFileNames.length > 0) {
                 ArrayList<CalendarDay> calendarDays = Arrays.stream(calendarFileNames)
-                        .map(File::new).filter(File::canRead).filter(File::isFile)
+                        .map(s -> new File(CALENDAR_FOLDER, s))
                         .map(CalendarDay::of).filter(Objects::nonNull)
                         .collect(Collectors.toCollection(ArrayList::new));
                 LOGGER.debug("Returning ArrayList of {} CalendarDays", calendarDays.size());
@@ -134,6 +135,7 @@ public class CalendarDay {
         } else {
             LOGGER.debug("No Calendar Folder found!\n{}", CALENDAR_FOLDER.getAbsolutePath());
         }
+        LOGGER.info("No Calendar Folder!");
         return null;
     }
 
