@@ -249,4 +249,19 @@ public class CalendarEvent {
         return String.format(
                 "# CalendarEvent #%n UNIQUE_ID: %s%n active: %s%n CREATED_ON: %s%n alert: %s%n start: %s%n end: %s%n name: %s%n description: %s%n data: %s", this.UNIQUE_ID, this.active, this.CREATED_ON, this.alert, this.start, this.end, this.name, this.description, this.data);
     }
+
+    @Override
+    public String toString() {
+        return "CalendarEvent{" +
+                "UNIQUE_ID='" + UNIQUE_ID + '\'' +
+                ", active=" + active +
+                ", CREATED_ON=" + CREATED_ON +
+                ", alert=" + alert +
+                ", start=" + start +
+                ", end=" + end +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

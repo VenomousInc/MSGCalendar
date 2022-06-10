@@ -18,7 +18,7 @@ class CalendarCommandTest {
     private static final Logger LOGGER = LoggerFactory.getLogger( CalendarCommandTest.class );
     private static final long MOCK_GUILD_ID = 1L;
     private static final long MOCK_CHANNEL_ID = 2L;
-    private static long mockMessageId = 0L;
+    private static final long MOCK_MESSAGE_ID = 0L;
     private static final long MOCK_AUTHOR_ID = 666L;
     public static void main(String[] args) {
         scannerTest();
@@ -35,7 +35,7 @@ class CalendarCommandTest {
 
             while(scanner.hasNext()) {
                 if(scanner.hasNextInt()) {
-                    CalendarEvent calendarEvent = buildAsDiscord(MOCK_GUILD_ID, MOCK_CHANNEL_ID, mockMessageId, MOCK_AUTHOR_ID);
+                    CalendarEvent calendarEvent = buildAsDiscord(MOCK_GUILD_ID, MOCK_CHANNEL_ID, MOCK_MESSAGE_ID, MOCK_AUTHOR_ID);
                     calendarEvent.setStart(Instant.now().plusSeconds(scanner.nextInt()).toEpochMilli());
                     calendarEvent.save();
 

@@ -169,4 +169,12 @@ public class CalendarDay {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "CalendarDay{" +
+                "DAY_OF_YEAR=" + DAY_OF_YEAR +
+                ", YEAR=" + YEAR +
+                ", EVENTS=" + EVENTS +
+                '}';
+    }
 }

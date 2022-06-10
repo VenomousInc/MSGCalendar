@@ -1,5 +1,8 @@
 package com.github.venomousinc.homebrew.calendar.data;
 
+import com.github.venomousinc.homebrew.calendar.data.CalendarDay;
+import com.github.venomousinc.homebrew.calendar.data.CalendarEvent;
+
 /**
  * A Paired Class, containing {@link #DAY} and {@link #EVENT}
  * Useful for returning the DAY that the EVENT is found in.
@@ -18,4 +21,5 @@ public class CalendarPair {
         DAY = day;
         EVENT = event;
     }
+
 }
